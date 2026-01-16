@@ -1,4 +1,4 @@
-# Weather App
+# weathermobileapp
 
 A React Native mobile application for checking current weather and 5-day forecasts, built with Redux Toolkit for state management and Axios for API calls.
 
@@ -22,7 +22,7 @@ Before you begin, ensure you have met the following requirements:
 ### 1. Clone the repository
 ```bash
 git clone <your-repo-url>
-cd MyApp
+cd weathermobileapp
 ```
 
 ### 2. Install Dependencies

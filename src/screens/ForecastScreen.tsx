@@ -6,6 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  SafeAreaView,
+  Platform,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchForecast } from '../redux/weatherSlice';
@@ -68,20 +70,21 @@ const ForecastScreen: React.FC = () => {
   const forecastDays = Object.entries(groupedForecast).slice(0, 5);
 
   return (
-    <ScrollView 
-      style={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.backButton}>← Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>5-Day Forecast</Text>
-        <View style={{ width: 20 }} /> {/* Spacer for alignment */}
-      </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView 
+        style={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={styles.backButton}>← Back</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>5-Day Forecast</Text>
+          <View style={{ width: 20 }} /> {/* Spacer for alignment */}
+        </View>
 
       {/* Location */}
       <View style={styles.locationContainer}>
@@ -116,13 +119,17 @@ const ForecastScreen: React.FC = () => {
         })}
       </View>
     </ScrollView>
+  </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: '#f0f8ff',
+  },
+  container: {
+    flex: 1,
   },
   containerCentered: {
     flex: 1,
@@ -136,7 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    paddingTop: 50,
+    paddingTop: Platform.OS === 'ios' ? 10 : 20,
   },
   headerTitle: {
     fontSize: 18,

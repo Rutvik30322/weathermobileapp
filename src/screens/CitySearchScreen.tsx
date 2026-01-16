@@ -8,6 +8,11 @@ import {
   Alert,
   ActivityIndicator,
   FlatList,
+  Keyboard,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCurrentWeather } from '../redux/weatherSlice';
@@ -64,68 +69,78 @@ const CitySearchScreen: React.FC = () => {
   ];
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter city name..."
-          value={city}
-          onChangeText={setCity}
-          onSubmitEditing={handleSearch}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleSearch} disabled={loading}>
-          {loading ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Search</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-
-      {error ? (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
-        </View>
-      ) : null}
-
-      {/* Popular Cities */}
-      <View style={styles.popularContainer}>
-        <Text style={styles.popularTitle}>Popular Cities</Text>
-        <FlatList
-          data={popularCities}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <TouchableOpacity 
-              style={styles.cityButton} 
-              onPress={() => handleCityPress(item.name)}
-            >
-              <Text style={styles.cityButtonText}>{item.name}</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
+        >
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter city name..."
+              value={city}
+              onChangeText={setCity}
+              onSubmitEditing={handleSearch}
+            />
+            <TouchableOpacity style={styles.button} onPress={handleSearch} disabled={loading}>
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Search</Text>
+              )}
             </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.name}
-        />
-      </View>
+          </View>
 
-      {/* Recent Searches - Placeholder for now */}
-      {currentWeather && (
-        <View style={styles.recentContainer}>
-          <Text style={styles.recentTitle}>Recent Search</Text>
-          <SearchCard 
-            weather={currentWeather} 
-            onPress={() => navigation.navigate('CurrentWeather')} 
-          />
-        </View>
-      )}
-    </View>
+          {error ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          ) : null}
+
+          {/* Popular Cities */}
+          <View style={styles.popularContainer}>
+            <Text style={styles.popularTitle}>Popular Cities</Text>
+            <FlatList
+              data={popularCities}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <TouchableOpacity 
+                  style={styles.cityButton} 
+                  onPress={() => handleCityPress(item.name)}
+                >
+                  <Text style={styles.cityButtonText}>{item.name}</Text>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item.name}
+            />
+          </View>
+
+          {/* Recent Searches - Placeholder for now */}
+          {currentWeather && (
+            <View style={styles.recentContainer}>
+              <Text style={styles.recentTitle}>Recent Search</Text>
+              <SearchCard 
+                weather={currentWeather} 
+                onPress={() => navigation.navigate('CurrentWeather')} 
+              />
+            </View>
+          )}
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f5f5f5',
   },
   searchContainer: {
     flexDirection: 'row',

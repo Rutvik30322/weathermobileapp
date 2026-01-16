@@ -7,6 +7,8 @@ import {
   Image,
   TouchableOpacity,
   RefreshControl,
+  SafeAreaView,
+  Platform,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCurrentWeather } from '../redux/weatherSlice';
@@ -59,24 +61,25 @@ const CurrentWeatherScreen: React.FC = () => {
   const iconUrl = `https://openweathermap.org/img/w/${currentWeather.weather[0].icon}.png`;
 
   return (
-    <ScrollView 
-      style={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {/* Header with back button */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.backButton}>← Back</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          onPress={() => navigation.navigate('Forecast')}
-          disabled={!currentWeather?.name}
-        >
-          <Text style={styles.forecastButton}>5-Day Forecast →</Text>
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView 
+        style={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {/* Header with back button */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={styles.backButton}>← Back</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('Forecast')}
+            disabled={!currentWeather?.name}
+          >
+            <Text style={styles.forecastButton}>5-Day Forecast →</Text>
+          </TouchableOpacity>
+        </View>
 
       {/* Main weather info */}
       <View style={styles.mainWeatherContainer}>
@@ -121,13 +124,17 @@ const CurrentWeatherScreen: React.FC = () => {
         />
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: '#f0f8ff',
+  },
+  container: {
+    flex: 1,
   },
   containerCentered: {
     flex: 1,
@@ -140,7 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 16,
-    paddingTop: 50,
+    paddingTop: Platform.OS === 'ios' ? 10 : 20,
   },
   backButton: {
     fontSize: 16,

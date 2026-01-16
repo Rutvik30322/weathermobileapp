@@ -1,38 +1,51 @@
 /**
- * Sample React Native App
+ * Weather App for iTechnoSol Recruitment Task
  * https://github.com/facebook/react-native
  *
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { StatusBar, StyleSheet, useColorScheme, SafeAreaView } from 'react-native';
+import { Provider } from 'react-redux';
+import { store } from './src/redux/store';
+
+import CurrentWeatherScreen from './src/screens/CurrentWeatherScreen';
+import ForecastScreen from './src/screens/ForecastScreen';
+import CitySearchScreen from './src/screens/CitySearchScreen';
+
+const Stack = createNativeStackNavigator();
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
-}
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
+    <Provider store={store}>
+      <SafeAreaView style={[styles.container, { flex: 1 }]}>  
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="CitySearch">
+            <Stack.Screen 
+              name="CitySearch" 
+              component={CitySearchScreen} 
+              options={{ title: 'Weather Search' }}
+            />
+            <Stack.Screen 
+              name="CurrentWeather" 
+              component={CurrentWeatherScreen} 
+              options={{ title: 'Current Weather' }}
+            />
+            <Stack.Screen 
+              name="Forecast" 
+              component={ForecastScreen} 
+              options={{ title: '5-Day Forecast' }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
+    </Provider>
   );
 }
 

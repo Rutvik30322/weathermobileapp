@@ -31,10 +31,14 @@ npm install
 ```
 
 ### 3. Configure API Key
-Create a `.env` file in the root directory and add your OpenWeatherMap API key:
+Open `src/services/config.ts` and replace `YOUR_API_KEY_HERE` with your actual OpenWeatherMap API key:
 
-```env
-WEATHER_API_KEY=your_actual_key_here
+```typescript
+export const API_CONFIG = {
+  BASE_URL: 'https://api.openweathermap.org/data/2.5',
+  API_KEY: 'your_actual_key_here',
+  UNITS: 'metric',
+};
 ```
 
 ### 4. Run the Application
